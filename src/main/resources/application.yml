@@ -27,3 +27,7 @@ spring:
 logging:
   level:
     root: warn
+
+jwt:
+  secret_key: ugBREaWPApCZRPIXqV5dwCLQxVlVzRf0YHeMhYEM29A=
+

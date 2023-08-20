@@ -1,10 +1,9 @@
-package com.miraijr.karaoke.room;
+package com.miraijr.karaoke.application.room;
 
-import com.miraijr.karaoke.room.DTOs.RoomDTO;
+import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

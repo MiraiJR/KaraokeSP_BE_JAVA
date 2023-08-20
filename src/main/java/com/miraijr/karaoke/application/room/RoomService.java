@@ -1,6 +1,6 @@
-package com.miraijr.karaoke.room;
+package com.miraijr.karaoke.application.room;
 
-import com.miraijr.karaoke.room.DTOs.RoomDTO;
+import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

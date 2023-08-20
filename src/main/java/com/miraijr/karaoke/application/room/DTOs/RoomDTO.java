@@ -1,4 +1,4 @@
-package com.miraijr.karaoke.room.DTOs;
+package com.miraijr.karaoke.application.room.DTOs;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

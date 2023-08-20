@@ -1,6 +1,6 @@
-package com.miraijr.karaoke.payment;
+package com.miraijr.karaoke.application.payment;
 
-import com.miraijr.karaoke.order.OrderEntity;
+import com.miraijr.karaoke.application.order.OrderEntity;
 import jakarta.persistence.*;
 
 @Entity

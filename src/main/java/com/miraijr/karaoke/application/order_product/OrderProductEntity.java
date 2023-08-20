@@ -1,7 +1,7 @@
-package com.miraijr.karaoke.order_product;
+package com.miraijr.karaoke.application.order_product;
 
-import com.miraijr.karaoke.order.OrderEntity;
-import com.miraijr.karaoke.product.ProductEntity;
+import com.miraijr.karaoke.application.order.OrderEntity;
+import com.miraijr.karaoke.application.product.ProductEntity;
 import jakarta.persistence.*;
 
 @Entity

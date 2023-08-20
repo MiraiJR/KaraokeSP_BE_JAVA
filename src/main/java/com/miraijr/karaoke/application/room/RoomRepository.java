@@ -1,4 +1,4 @@
-package com.miraijr.karaoke.room;
+package com.miraijr.karaoke.application.room;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

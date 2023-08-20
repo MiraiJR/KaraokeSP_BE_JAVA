@@ -1,6 +1,6 @@
-package com.miraijr.karaoke.room;
+package com.miraijr.karaoke.application.room;
 
-import com.miraijr.karaoke.order.OrderEntity;
+import com.miraijr.karaoke.application.order.OrderEntity;
 import jakarta.persistence.*;
 
 import java.util.Date;
