@@ -3,7 +3,7 @@ package com.miraijr.karaoke.room.DTOs;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public class CreateRoomDTO {
+public class RoomDTO {
     @NotNull(message = "Name cannot be null")
     private String name;
 
@@ -15,10 +15,10 @@ public class CreateRoomDTO {
     @Positive(message = "Price must be a positive number")
     private Long price;
 
-    public CreateRoomDTO() {
+    public RoomDTO() {
     }
 
-    public CreateRoomDTO(@NotNull(message = "Name cannot be null") String name, @NotNull(message = "Floor cannot be null") Integer floor, @NotNull(message = "Price cannot be null") Long price) {
+    public RoomDTO(@NotNull(message = "Name cannot be null") String name, @NotNull(message = "Floor cannot be null") Integer floor, @NotNull(message = "Price cannot be null") Long price) {
         this.name = name;
         this.floor = floor;
         this.price = price;
@@ -46,5 +46,14 @@ public class CreateRoomDTO {
 
     public void setPrice(Long price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateRoomDTO{" +
+                "name='" + name + '\'' +
+                ", floor=" + floor +
+                ", price=" + price +
+                '}';
     }
 }
