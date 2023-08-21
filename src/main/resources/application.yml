@@ -29,5 +29,5 @@ logging:
     root: warn
 
 jwt:
-  secret_key: ugBREaWPApCZRPIXqV5dwCLQxVlVzRf0YHeMhYEM29A=
-
+  access_key: ugBREaWPApCZRPIXqV5dwCLQxVlVzRf0YHeMhYEM29A=
+  refresh_key: lRJoWqdH2B752HqEPlDLK7zhC5oysqxf9Wz1O5bWeO0=

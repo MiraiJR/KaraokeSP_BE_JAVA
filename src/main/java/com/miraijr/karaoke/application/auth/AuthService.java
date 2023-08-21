@@ -5,6 +5,7 @@ import com.miraijr.karaoke.application.jwt.JwtService;
 import com.miraijr.karaoke.application.user.UserEntity;
 import com.miraijr.karaoke.application.user.UserRepository;
 import com.miraijr.karaoke.application.user.UserService;
+import com.miraijr.karaoke.shared.constants.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,11 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or password is not valid!");
         }
 
-        String accessToken = jwtService.generateAccessToken(user.getId());
+        String accessToken = jwtService.generateToken(user.getId(), Constant.ACCESS_TOKEN);
+        String refreshToken = jwtService.generateToken(user.getId(), Constant.FRESH_TOKEN);
 
         user.setAccesstToken(accessToken);
+        user.setRefreshToken(refreshToken);
 
         user = userService.updateUser(user);
         return user;

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class Constant {
     public static String bearer = "Bearer ";
-
-    @Value("${jwt.secret_key}")
-    public static String SECRET_KEY;
+    public static String ACCESS_TOKEN = "accesstoken";
+    public static String FRESH_TOKEN = "refreshtoken";
 }

@@ -33,24 +33,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
-        if(authHeader == null || !authHeader.startsWith(Constant.bearer)) {
+        if (authHeader == null || !authHeader.startsWith(Constant.bearer)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String jwtToken = authHeader.substring(Constant.bearer.length());
-        Boolean isTokenValid = jwtService.isTokenValid(jwtToken);
 
-        if(!isTokenValid) {
+        try {
+            jwtService.isTokenValid(jwtToken);
+            request.setAttribute("userId", jwtService.extractUserId(jwtToken));
+        } catch (Exception ex) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                    "Token is not valid!");
+                    ex.getMessage());
             response.setContentType("application/json");
             response.getWriter().write(errorResponse.toString());
             return;
         }
 
-        request.setAttribute("userId", jwtService.extractUserId(jwtToken));
         filterChain.doFilter(request, response);
     }
 }

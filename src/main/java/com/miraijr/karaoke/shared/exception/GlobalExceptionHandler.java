@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponse> hanldeResponseStatusException(ResponseStatusException responseStatusException) {
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException responseStatusException) {
         ErrorResponse errorResponse = new ErrorResponse(responseStatusException.getStatusCode().value()
                 , HttpStatus.valueOf(responseStatusException.getStatusCode().value()).name()
                 , responseStatusException.getReason());

@@ -1,6 +1,7 @@
 package com.miraijr.karaoke.application.auth;
 
 import com.miraijr.karaoke.application.auth.DTOs.AuthDTO;
+import com.miraijr.karaoke.application.auth.types.AuthResponse;
 import com.miraijr.karaoke.application.user.UserEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserEntity handleLogin(@RequestBody @Valid AuthDTO account) {
+    public AuthResponse handleLogin(@RequestBody @Valid AuthDTO account) {
         UserEntity user = authService.login(account);
 
-        return user;
+        AuthResponse authResponse = new AuthResponse(user.getAccesstToken(), user.getRefreshToken());
+        return authResponse;
     }
 }
