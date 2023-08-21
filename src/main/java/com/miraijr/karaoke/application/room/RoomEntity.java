@@ -1,6 +1,6 @@
-package com.miraijr.karaoke.room;
+package com.miraijr.karaoke.application.room;
 
-import com.miraijr.karaoke.order.OrderEntity;
+import com.miraijr.karaoke.application.order.OrderEntity;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -22,10 +22,8 @@ public class RoomEntity {
     )
     private Integer floor;
 
-    @Column(
-           columnDefinition = "bit default B'0'"
-    )
-    private Boolean is_available;
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
     @Column(
             nullable = false
@@ -33,15 +31,17 @@ public class RoomEntity {
     private Long price;
 
     @Column(
-            nullable = true
+            nullable = true,
+            name = "started_at"
     )
-    private Date started_at;
+    private Date startedAt;
+
 
     @Column(
-            nullable = true
+            nullable = true,
+            name = "ended_at"
     )
-    private Date ended_at;
-
+    private Date endedAt;
     @OneToOne(
             mappedBy = "room",
             cascade = CascadeType.ALL
@@ -81,12 +81,12 @@ public class RoomEntity {
         this.floor = floor;
     }
 
-    public Boolean getIs_available() {
-        return is_available;
+    public Boolean getAvailable() {
+        return isAvailable;
     }
 
-    public void setIs_available(Boolean is_available) {
-        this.is_available = is_available;
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
     }
 
     public Long getPrice() {
@@ -97,19 +97,41 @@ public class RoomEntity {
         this.price = price;
     }
 
-    public Date getStarted_at() {
-        return started_at;
+    public Date getStartedAt() {
+        return startedAt;
     }
 
-    public void setStarted_at(Date started_at) {
-        this.started_at = started_at;
+    public void setStartedAt(Date startedAt) {
+        this.startedAt = startedAt;
     }
 
-    public Date getEnded_at() {
-        return ended_at;
+    public Date getEndedAt() {
+        return endedAt;
     }
 
-    public void setEnded_at(Date ended_at) {
-        this.ended_at = ended_at;
+    public void setEndedAt(Date endedAt) {
+        this.endedAt = endedAt;
+    }
+
+    public OrderEntity getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderEntity order) {
+        this.order = order;
+    }
+
+    @Override
+    public String toString() {
+        return "RoomEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", floor=" + floor +
+                ", isAvailable=" + isAvailable +
+                ", price=" + price +
+                ", startedAt=" + startedAt +
+                ", endedAt=" + endedAt +
+                ", order=" + order +
+                '}';
     }
 }

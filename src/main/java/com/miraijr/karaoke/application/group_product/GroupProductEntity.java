@@ -1,6 +1,6 @@
-package com.miraijr.karaoke.group_product;
+package com.miraijr.karaoke.application.group_product;
 
-import com.miraijr.karaoke.product.ProductEntity;
+import com.miraijr.karaoke.application.product.ProductEntity;
 import jakarta.persistence.*;
 
 import java.util.List;

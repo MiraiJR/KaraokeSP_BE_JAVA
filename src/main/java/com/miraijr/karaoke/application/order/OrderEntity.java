@@ -1,7 +1,7 @@
-package com.miraijr.karaoke.order;
+package com.miraijr.karaoke.application.order;
 
-import com.miraijr.karaoke.order_product.OrderProductEntity;
-import com.miraijr.karaoke.room.RoomEntity;
+import com.miraijr.karaoke.application.order_product.OrderProductEntity;
+import com.miraijr.karaoke.application.room.RoomEntity;
 import jakarta.persistence.*;
 
 import java.util.List;
