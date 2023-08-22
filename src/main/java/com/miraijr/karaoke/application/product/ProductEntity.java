@@ -1,11 +1,14 @@
 package com.miraijr.karaoke.application.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miraijr.karaoke.application.group_product.GroupProductEntity;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "products")
-public class ProductEntity {
+public class ProductEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,8 +23,9 @@ public class ProductEntity {
     )
     private String code;
 
-    @OneToOne(
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+    @JsonIgnore
+    @ManyToOne(
+            fetch = FetchType.LAZY
     )
     @JoinColumn(name = "group_product_id")
     private GroupProductEntity groupProduct;
@@ -29,12 +33,12 @@ public class ProductEntity {
     @Column(
             nullable = false
     )
-    private Float price;
+    private Long price;
 
     public ProductEntity() {
     }
 
-    public ProductEntity(String name, String code, Float price) {
+    public ProductEntity(String name, String code, Long price) {
         this.name = name;
         this.code = code;
         this.price = price;
@@ -44,25 +48,45 @@ public class ProductEntity {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCode() {
         return code;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public GroupProductEntity getGroupProduct() {
         return groupProduct;
     }
 
-    public Float getPrice() {
+    public void setGroupProduct(GroupProductEntity groupProduct) {
+        this.groupProduct = groupProduct;
+    }
+
+    public Long getPrice() {
         return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "ProductEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", code='" + code + '\'' +

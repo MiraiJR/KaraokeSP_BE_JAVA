@@ -3,6 +3,7 @@ package com.miraijr.karaoke.application.group_product;
 import com.miraijr.karaoke.application.product.ProductEntity;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class GroupProductEntity {
 
     @OneToMany(
             mappedBy = "groupProduct",
-            cascade = CascadeType.ALL
+            fetch = FetchType.EAGER
     )
     private List<ProductEntity> products;
 
@@ -54,9 +55,18 @@ public class GroupProductEntity {
         this.products = products;
     }
 
+    public void addProduct(ProductEntity newProduct) {
+        if(products == null) {
+            products = new ArrayList<>();
+        }
+
+        products.add(newProduct);
+        newProduct.setGroupProduct(this);
+    }
+
     @Override
     public String toString() {
-        return "GroupProduct{" +
+        return "GroupProductEntity{" +
                 "code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 '}';
