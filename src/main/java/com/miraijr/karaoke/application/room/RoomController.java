@@ -1,6 +1,8 @@
 package com.miraijr.karaoke.application.room;
 
 import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
+import com.miraijr.karaoke.application.room.types.RoomDetail;
+import com.miraijr.karaoke.shared.utils.Helper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,9 +56,23 @@ public class RoomController {
 
     @GetMapping("/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public RoomEntity handleGetSpecificRoom(@PathVariable Integer roomId) {
-        RoomEntity room = roomService.getRoomById(roomId);
+    public RoomDetail handleGetSpecificRoom(@PathVariable Integer roomId) {
+        RoomDetail room = roomService.getRoomDetailById(roomId);
 
         return room;
+    }
+
+    @PutMapping("/{roomId}/open")
+    public RoomDetail handleOpenRoom(@PathVariable Integer roomId) {
+        RoomDetail room = roomService.openRoom(roomId);
+
+        return room;
+    }
+
+    @PutMapping("/{roomId}/close")
+    public RoomDetail handleCloseRoom(@PathVariable Integer roomId) {
+        RoomEntity room = roomService.closeRoom(roomId);
+
+        return Helper.convertRoomToRoomDetail(room);
     }
 }

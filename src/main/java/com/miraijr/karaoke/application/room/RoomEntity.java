@@ -1,6 +1,8 @@
 package com.miraijr.karaoke.application.room;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miraijr.karaoke.application.order.OrderEntity;
+import com.miraijr.karaoke.application.payment.PaymentEntity;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -42,11 +44,16 @@ public class RoomEntity {
             name = "ended_at"
     )
     private Date endedAt;
-    @OneToOne(
-            mappedBy = "room",
-            cascade = CascadeType.ALL
-    )
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "order_id")
     private OrderEntity order;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private PaymentEntity payment;
 
     public RoomEntity() {
     }
@@ -121,6 +128,14 @@ public class RoomEntity {
         this.order = order;
     }
 
+    public PaymentEntity getPayment() {
+        return payment;
+    }
+
+    public void setPayment(PaymentEntity payment) {
+        this.payment = payment;
+    }
+
     @Override
     public String toString() {
         return "RoomEntity{" +
@@ -131,7 +146,6 @@ public class RoomEntity {
                 ", price=" + price +
                 ", startedAt=" + startedAt +
                 ", endedAt=" + endedAt +
-                ", order=" + order +
                 '}';
     }
 }

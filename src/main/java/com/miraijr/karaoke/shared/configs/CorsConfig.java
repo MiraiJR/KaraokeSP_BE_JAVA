@@ -13,8 +13,9 @@
 //            @Override
 //            public void addCorsMappings(CorsRegistry registry) {
 //                registry.addMapping("/**")
-//                        .allowedOrigins("http://localhost:3001/")
+//                        .allowedOrigins("http://localhost:3001")
 //                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+//                        .allowedHeaders("Authorization", "Content-Type", "Other-Header")
 //                        .allowCredentials(true);
 //            }
 //        };

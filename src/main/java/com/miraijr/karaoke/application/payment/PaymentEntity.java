@@ -1,6 +1,8 @@
 package com.miraijr.karaoke.application.payment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miraijr.karaoke.application.order.OrderEntity;
+import com.miraijr.karaoke.application.room.RoomEntity;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,9 +12,10 @@ public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private OrderEntity order;
+    @Column(
+            name = "room_name"
+    )
+    private String roomName;
 
     @Column(
             name = "singing_time",
@@ -33,7 +36,7 @@ public class PaymentEntity {
             nullable = false,
             columnDefinition = "BIGINT default 0"
     )
-    private Long getTotalMoneyHour;
+    private Long totalMoneyHour;
 
     @Column(
             name = "total_money",
@@ -42,10 +45,37 @@ public class PaymentEntity {
     )
     private Long totalMoney;
 
+    @JsonIgnore
+    @OneToOne(
+            mappedBy = "payment",
+            cascade = CascadeType.REMOVE
+    )
+    private RoomEntity room;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
+
+    public PaymentEntity() {
+        this.singingTime = 0L;
+        this.totalMoneyProduct = 0L;
+        this.totalMoneyHour = 0L;
+        this.totalMoney = 0L;
+    }
+
+    public PaymentEntity(String roomName) {
+        this.roomName = roomName;
+        this.singingTime = 0L;
+        this.totalMoneyProduct = 0L;
+        this.totalMoneyHour = 0L;
+        this.totalMoney = 0L;
+    }
+
     public PaymentEntity(Long singingTime, Long totalMoneyProduct, Long getTotalMoneyHour, Long totalMoney) {
         this.singingTime = singingTime;
         this.totalMoneyProduct = totalMoneyProduct;
-        this.getTotalMoneyHour = getTotalMoneyHour;
+        this.totalMoneyHour = getTotalMoneyHour;
         this.totalMoney = totalMoney;
     }
 
@@ -55,14 +85,6 @@ public class PaymentEntity {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public OrderEntity getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
     }
 
     public Long getSingingTime() {
@@ -81,12 +103,12 @@ public class PaymentEntity {
         this.totalMoneyProduct = totalMoneyProduct;
     }
 
-    public Long getGetTotalMoneyHour() {
-        return getTotalMoneyHour;
+    public Long getTotalMoneyHour() {
+        return totalMoneyHour;
     }
 
-    public void setGetTotalMoneyHour(Long getTotalMoneyHour) {
-        this.getTotalMoneyHour = getTotalMoneyHour;
+    public void setTotalMoneyHour(Long getTotalMoneyHour) {
+        this.totalMoneyHour = getTotalMoneyHour;
     }
 
     public Long getTotalMoney() {
@@ -97,14 +119,38 @@ public class PaymentEntity {
         this.totalMoney = totalMoney;
     }
 
+    public OrderEntity getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderEntity order) {
+        this.order = order;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public RoomEntity getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomEntity room) {
+        this.room = room;
+    }
+
     @Override
     public String toString() {
         return "PaymentEntity{" +
                 "id=" + id +
-                ", order=" + order +
+                ", roomName='" + roomName + '\'' +
                 ", singingTime=" + singingTime +
                 ", totalMoneyProduct=" + totalMoneyProduct +
-                ", getTotalMoneyHour=" + getTotalMoneyHour +
+                ", totalMoneyHour=" + totalMoneyHour +
                 ", totalMoney=" + totalMoney +
                 '}';
     }
