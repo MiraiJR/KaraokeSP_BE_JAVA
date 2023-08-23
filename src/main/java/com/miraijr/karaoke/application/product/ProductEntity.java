@@ -25,7 +25,7 @@ public class ProductEntity implements Serializable {
 
     @JsonIgnore
     @ManyToOne(
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinColumn(name = "group_product_id")
     private GroupProductEntity groupProduct;

@@ -69,7 +69,7 @@ public class JwtService {
 
         UserEntity user = userService.findUserById(Integer.valueOf(userId));
 
-        return user != null && !isTokenExpired(token);
+        return user != null && user.getAccesstToken().equals(token) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) throws Exception {

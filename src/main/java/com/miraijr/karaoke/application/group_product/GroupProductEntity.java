@@ -1,5 +1,6 @@
 package com.miraijr.karaoke.application.group_product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miraijr.karaoke.application.product.ProductEntity;
 import jakarta.persistence.*;
 
@@ -17,6 +18,7 @@ public class GroupProductEntity {
     )
     private String name;
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "groupProduct",
             fetch = FetchType.EAGER
