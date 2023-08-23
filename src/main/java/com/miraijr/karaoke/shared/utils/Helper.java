@@ -22,10 +22,6 @@ public class Helper {
         return (long) (roundedHours * price);
     }
 
-    public static RoomDetail convertRoomToRoomDetail(RoomEntity room) {
-        return new RoomDetail(room, room.getOrder(), room.getPayment());
-    }
-
     public static Long calculateTotalMoneyOfPayment(PaymentEntity payment) {
         return payment.getTotalMoneyHour() + payment.getTotalMoneyProduct();
     }
