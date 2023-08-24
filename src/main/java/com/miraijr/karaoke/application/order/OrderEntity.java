@@ -1,7 +1,7 @@
 package com.miraijr.karaoke.application.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.miraijr.karaoke.application.order_product.OrderProductEntity;
+import com.miraijr.karaoke.application.ordered_product.OrderedProductEntity;
 import com.miraijr.karaoke.application.room.RoomEntity;
 import jakarta.persistence.*;
 
@@ -19,7 +19,7 @@ public class OrderEntity {
             cascade = CascadeType.REMOVE,
             fetch = FetchType.EAGER
     )
-    private List<OrderProductEntity> products;
+    private List<OrderedProductEntity> products;
 
     @JsonIgnore
     @OneToOne(
@@ -39,11 +39,11 @@ public class OrderEntity {
         this.id = id;
     }
 
-    public List<OrderProductEntity> getProducts() {
+    public List<OrderedProductEntity> getProducts() {
         return products;
     }
 
-    public void setProducts(List<OrderProductEntity> products) {
+    public void setProducts(List<OrderedProductEntity> products) {
         this.products = products;
     }
 

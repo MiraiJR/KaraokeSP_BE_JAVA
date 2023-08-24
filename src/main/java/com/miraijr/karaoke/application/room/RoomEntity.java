@@ -51,7 +51,9 @@ public class RoomEntity {
     private OrderEntity order;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(
+            cascade = CascadeType.MERGE
+    )
     @JoinColumn(name = "payment_id")
     private PaymentEntity payment;
 

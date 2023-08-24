@@ -1,4 +1,4 @@
-package com.miraijr.karaoke.application.order_product;
+package com.miraijr.karaoke.application.ordered_product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miraijr.karaoke.application.order.OrderEntity;
@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "order_products")
-public class OrderProductEntity {
+@IdClass(OrderedProductId.class)
+public class OrderedProductEntity {
     @JsonIgnore
     @Id
     @ManyToOne(
@@ -26,10 +27,10 @@ public class OrderProductEntity {
     )
     private Integer quantity;
 
-    public OrderProductEntity() {
+    public OrderedProductEntity() {
     }
 
-    public OrderProductEntity(Integer quantity) {
+    public OrderedProductEntity(Integer quantity) {
         this.quantity = quantity;
     }
 

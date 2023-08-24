@@ -2,10 +2,13 @@ package com.miraijr.karaoke.application.room;
 
 import com.miraijr.karaoke.application.order.OrderEntity;
 import com.miraijr.karaoke.application.order.OrderService;
+import com.miraijr.karaoke.application.ordered_product.DTOs.OrderedProductDTO;
+import com.miraijr.karaoke.application.ordered_product.OrderedProductService;
 import com.miraijr.karaoke.application.payment.PaymentEntity;
 import com.miraijr.karaoke.application.payment.PaymentService;
 import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
 import com.miraijr.karaoke.application.room.types.RoomDetail;
+import com.miraijr.karaoke.shared.utils.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -23,13 +26,15 @@ public class RoomService {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
+    private final OrderedProductService orderedProductService;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository, ModelMapper modelMapper, OrderService orderService, PaymentService paymentService) {
+    public RoomService(RoomRepository roomRepository, ModelMapper modelMapper, OrderService orderService, PaymentService paymentService, OrderedProductService orderedProductService) {
         this.roomRepository = roomRepository;
         this.modelMapper = modelMapper;
         this.orderService = orderService;
         this.paymentService = paymentService;
+        this.orderedProductService = orderedProductService;
     }
 
     public RoomEntity createNewRoom(RoomDTO room) {
@@ -69,9 +74,13 @@ public class RoomService {
 
     public RoomDetail getRoomDetailById(Integer roomId) {
         RoomEntity room = getRoomById(roomId);
-        RoomDetail roomDetail = new RoomDetail(room, room.getOrder(), room.getPayment());
+        room.setEndedAt(new Date());
 
-        return roomDetail;
+        if(room.getOrder() != null && room.getPayment() != null) {
+            return new RoomDetail(room, room.getOrder(), paymentService.calculatePayment(room));
+        }
+
+        return Converter.convertRoomToRoomDetail(room);
     }
 
     public List<RoomEntity> getRooms() {
@@ -104,12 +113,43 @@ public class RoomService {
 
     public RoomEntity closeRoom(Integer roomId) {
         RoomEntity room = getRoomById(roomId);
-        room.setEndedAt(new Date());
 
-        paymentService.calculatePayment(room);
+        if(room.getAvailable()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(room.getName()));
+        }
+
+        room.setPayment(paymentService.calculatePayment(room));
+        paymentService.updatePayment(room.getPayment());
 
         room = defaultField(room);
         return roomRepository.save(room);
+    }
+
+    public RoomDetail orderProduct(Integer roomId, OrderedProductDTO orderedProduct) {
+        RoomEntity room = getRoomById(roomId);
+
+        if(room.getAvailable()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(room.getName()));
+        }
+
+        OrderEntity updatedOrder = orderedProductService.orderProduct(room.getOrder(), orderedProduct);
+        room.setOrder(updatedOrder);
+        room.setPayment(paymentService.calculatePayment(room));
+
+        return Converter.convertRoomToRoomDetail(room);
+    }
+    public RoomDetail updateOrderedProduct(Integer roomId, OrderedProductDTO orderedProduct) {
+        RoomEntity room = getRoomById(roomId);
+
+        if(room.getAvailable()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(room.getName()));
+        }
+
+        OrderEntity updatedOrder = orderedProductService.updateOrderedProduct(room.getOrder(), orderedProduct);
+        room.setOrder(updatedOrder);
+        room.setPayment(paymentService.calculatePayment(room));
+
+        return Converter.convertRoomToRoomDetail(room);
     }
 
     public RoomEntity defaultField(RoomEntity room) {
