@@ -1,15 +1,13 @@
 package com.miraijr.karaoke.application.auth;
 
 import com.miraijr.karaoke.application.auth.DTOs.AuthDTO;
+import com.miraijr.karaoke.application.auth.DTOs.RefreshTokenDTO;
 import com.miraijr.karaoke.application.auth.types.AuthResponse;
 import com.miraijr.karaoke.application.user.UserEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,7 +24,13 @@ public class AuthController {
     public AuthResponse handleLogin(@RequestBody @Valid AuthDTO account) {
         UserEntity user = authService.login(account);
 
-        AuthResponse authResponse = new AuthResponse(user.getAccesstToken(), user.getRefreshToken());
+        return new AuthResponse(user.getAccesstToken(), user.getRefreshToken());
+    }
+
+    @PutMapping("/refresh-token")
+    public AuthResponse handleRefreshToken(@RequestBody @Valid RefreshTokenDTO refreshTokenDTO) throws Exception {
+        AuthResponse authResponse = authService.refreshToken(refreshTokenDTO.getRefreshToken());
+
         return authResponse;
     }
 }
