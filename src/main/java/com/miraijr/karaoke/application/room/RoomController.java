@@ -1,8 +1,9 @@
 package com.miraijr.karaoke.application.room;
 
+import com.miraijr.karaoke.application.ordered_product.DTOs.OrderedProductDTO;
 import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
 import com.miraijr.karaoke.application.room.types.RoomDetail;
-import com.miraijr.karaoke.shared.utils.Helper;
+import com.miraijr.karaoke.shared.utils.Converter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,6 +74,20 @@ public class RoomController {
     public RoomDetail handleCloseRoom(@PathVariable Integer roomId) {
         RoomEntity room = roomService.closeRoom(roomId);
 
-        return Helper.convertRoomToRoomDetail(room);
+        return Converter.convertRoomToRoomDetail(room);
+    }
+
+    @PutMapping("/{roomId}/order")
+    public RoomDetail handleOrderProduct(@RequestBody @Valid OrderedProductDTO orderedProduct, @PathVariable Integer roomId) {
+        RoomDetail room = roomService.orderProduct(roomId, orderedProduct);
+
+        return room;
+    }
+
+    @PutMapping("/{roomId}/update/ordered-product")
+    public RoomDetail handleUpdateOrderedProduct(@RequestBody @Valid OrderedProductDTO orderedProduct, @PathVariable Integer roomId) {
+        RoomDetail room = roomService.updateOrderedProduct(roomId, orderedProduct);
+
+        return room;
     }
 }

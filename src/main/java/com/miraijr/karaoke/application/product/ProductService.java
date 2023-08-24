@@ -61,9 +61,7 @@ public class ProductService {
 
     @Transactional
     public ProductEntity updateProduct(Integer productId, ProductDTO productDTO) {
-        ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id [%s] not found".formatted(productId)));
-
+        ProductEntity product = getProductById(productId);
         GroupProductEntity group = groupProductService.getGroupProductByCode(productDTO.getGroupProduct());
 
         if (group == null) {
@@ -86,9 +84,13 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Integer productId) {
-        ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id [%s] not found".formatted(productId)));
+        ProductEntity product = getProductById(productId);
 
         productRepository.delete(product);
+    }
+
+    public ProductEntity getProductById(Integer productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id [%s] not found".formatted(productId)));
     }
 }

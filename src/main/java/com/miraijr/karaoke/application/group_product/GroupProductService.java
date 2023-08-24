@@ -3,6 +3,8 @@ package com.miraijr.karaoke.application.group_product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GroupProductService {
     private final GroupProductRepository groupProductRepository;
@@ -14,5 +16,9 @@ public class GroupProductService {
 
     public GroupProductEntity getGroupProductByCode(String code) {
         return groupProductRepository.findGroupProductByCode(code);
+    }
+
+    public List<GroupProductEntity> getGroupsProduct() {
+        return groupProductRepository.findAll();
     }
 }

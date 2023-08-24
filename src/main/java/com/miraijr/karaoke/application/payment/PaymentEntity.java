@@ -48,7 +48,7 @@ public class PaymentEntity {
     @JsonIgnore
     @OneToOne(
             mappedBy = "payment",
-            cascade = CascadeType.REMOVE
+            cascade = {CascadeType.REMOVE, CascadeType.MERGE}
     )
     private RoomEntity room;
 
