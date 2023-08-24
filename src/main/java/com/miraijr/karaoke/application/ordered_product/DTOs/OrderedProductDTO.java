@@ -1,11 +1,12 @@
 package com.miraijr.karaoke.application.ordered_product.DTOs;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public class OrderedProductDTO {
     @NotNull(message = "Quantity cannot be null")
-    @Positive(message = "Quantity must be positive number")
+    @Min(value = 0, message = "Quantity must be greater than or equal to 0")
     private Integer quantity;
 
     @NotNull(message = "ProductId cannot be null")
