@@ -17,7 +17,8 @@ public class JwtService {
     private String ACCESS_SECRET_KEY;
     @Value(("${jwt.refresh_key}"))
     private String REFRESH_SECRET_KEY;
-    private final Integer ONE_DAY = 1000 * 60 * 60 * 24;
+    private final Integer ACCESS_TOKEN_EXPIRED = 1000 * 60 * 60 * 1;
+    private final Integer REFRESH_TOKEN_EXPIRED = 1000 * 60 * 60 * 24 * 7;
     private final UserService userService;
 
     @Autowired
@@ -25,12 +26,12 @@ public class JwtService {
         this.userService = userService;
     }
 
-    public String extractUserId(String token) throws Exception {
-        return extractClaim(token, Claims::getSubject);
+    public String extractUserId(String token, String type) throws Exception {
+        return extractClaim(token, Claims::getSubject, type);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws Exception {
-        Claims claims = extractAllClaims(token);
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver, String type) throws Exception {
+        Claims claims = extractAllClaims(token, type);
         return claimsResolver.apply(claims);
     }
 
@@ -41,15 +42,23 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ONE_DAY))
-                .signWith(SignatureAlgorithm.HS256, type.equals(Constant.ACCESS_TOKEN) ? ACCESS_SECRET_KEY : REFRESH_SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + expiredOfTypeToken(type)))
+                .signWith(SignatureAlgorithm.HS256, checkTypeToken(type))
                 .compact();
     }
 
-    private Claims extractAllClaims(String token) throws Exception {
+    private String checkTypeToken(String type) {
+        return type.equals(Constant.ACCESS_TOKEN) ? ACCESS_SECRET_KEY : REFRESH_SECRET_KEY;
+    }
+
+    private Integer expiredOfTypeToken(String type) {
+        return type.equals(Constant.ACCESS_TOKEN) ? ACCESS_TOKEN_EXPIRED : REFRESH_TOKEN_EXPIRED;
+    }
+
+    private Claims extractAllClaims(String token, String type) throws Exception {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(ACCESS_SECRET_KEY)
+                    .setSigningKey(checkTypeToken(type))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
@@ -64,19 +73,23 @@ public class JwtService {
         }
     }
 
-    public boolean isTokenValid(String token) throws Exception {
-        String userId = extractUserId(token);
+    public boolean isTokenValid(String token, String type) throws Exception {
+        String userId = extractUserId(token, type);
 
         UserEntity user = userService.findUserById(Integer.valueOf(userId));
 
-        return user != null && user.getAccesstToken().equals(token) && !isTokenExpired(token);
+        if (type.equals(Constant.REFRESH_TOKEN)) {
+            return user != null && user.getRefreshToken().equals(token) && !isTokenExpired(token, type);
+        }
+
+        return user != null && user.getAccesstToken().equals(token) && !isTokenExpired(token, type);
     }
 
-    private boolean isTokenExpired(String token) throws Exception {
-        return extractExpiration(token).before(new Date());
+    private boolean isTokenExpired(String token, String type) throws Exception {
+        return extractExpiration(token, type).before(new Date());
     }
 
-    private Date extractExpiration(String token) throws Exception {
-        return extractClaim(token, Claims::getExpiration);
+    private Date extractExpiration(String token, String type) throws Exception {
+        return extractClaim(token, Claims::getExpiration, type);
     }
 }

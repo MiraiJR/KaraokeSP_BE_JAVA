@@ -21,7 +21,7 @@ import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static List<String> skipFilterUrls = Arrays.asList("/auth/login");
+    private static List<String> skipFilterUrls = Arrays.asList("/auth/login", "/auth/refresh-token");
 
     private final JwtService jwtService;
 
@@ -50,8 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwtToken = authHeader.substring(Constant.bearer.length());
 
         try {
-            jwtService.isTokenValid(jwtToken);
-            request.setAttribute("userId", jwtService.extractUserId(jwtToken));
+            jwtService.isTokenValid(jwtToken, Constant.ACCESS_TOKEN);
+            request.setAttribute("userId", jwtService.extractUserId(jwtToken, Constant.ACCESS_TOKEN));
         } catch (Exception ex) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(),
