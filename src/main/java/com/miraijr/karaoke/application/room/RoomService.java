@@ -76,7 +76,7 @@ public class RoomService {
         RoomEntity room = getRoomById(roomId);
         room.setEndedAt(new Date());
 
-        if(room.getOrder() != null && room.getPayment() != null) {
+        if (room.getOrder() != null && room.getPayment() != null) {
             return new RoomDetail(room, room.getOrder(), paymentService.calculatePayment(room));
         }
 
@@ -114,7 +114,7 @@ public class RoomService {
     public RoomEntity closeRoom(Integer roomId) {
         RoomEntity room = getRoomById(roomId);
 
-        if(room.getAvailable()) {
+        if (room.getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(room.getName()));
         }
 
@@ -128,7 +128,7 @@ public class RoomService {
     public RoomDetail orderProduct(Integer roomId, OrderedProductDTO orderedProduct) {
         RoomEntity room = getRoomById(roomId);
 
-        if(room.getAvailable()) {
+        if (room.getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(room.getName()));
         }
 
@@ -138,10 +138,11 @@ public class RoomService {
 
         return Converter.convertRoomToRoomDetail(room);
     }
+
     public RoomDetail updateOrderedProduct(Integer roomId, OrderedProductDTO orderedProduct) {
         RoomEntity room = getRoomById(roomId);
 
-        if(room.getAvailable()) {
+        if (room.getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(room.getName()));
         }
 
@@ -150,6 +151,36 @@ public class RoomService {
         room.setPayment(paymentService.calculatePayment(room));
 
         return Converter.convertRoomToRoomDetail(room);
+    }
+
+    public RoomDetail changeRoom(Integer sourceRoomId, Integer destinationRoomId) {
+        RoomEntity sourceRoom = getRoomById(sourceRoomId);
+        if (sourceRoom.getAvailable()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] không hoạt động!".formatted(sourceRoom.getName()));
+        }
+
+        RoomEntity destinationRoom = getRoomById(destinationRoomId);
+        if (!destinationRoom.getAvailable()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "[%s] đang hoạt động!".formatted(destinationRoom.getName()));
+        }
+
+        // open room
+        destinationRoom.setStartedAt(sourceRoom.getStartedAt());
+        destinationRoom.setAvailable(false);
+
+        // move order + payment of source room to destination room
+        sourceRoom.getOrder().setRoom(destinationRoom);
+        sourceRoom.getPayment().setRoom(destinationRoom);
+        destinationRoom.setOrder(sourceRoom.getOrder());
+        destinationRoom.setPayment(sourceRoom.getPayment());
+
+        // close source room
+        sourceRoom = defaultField(sourceRoom);
+
+        // update destination + source room to database
+        roomRepository.save(sourceRoom);
+        destinationRoom = roomRepository.save(destinationRoom);
+        return Converter.convertRoomToRoomDetail(destinationRoom);
     }
 
     public RoomEntity defaultField(RoomEntity room) {

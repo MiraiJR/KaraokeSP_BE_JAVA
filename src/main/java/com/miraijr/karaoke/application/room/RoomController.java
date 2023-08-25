@@ -1,6 +1,7 @@
 package com.miraijr.karaoke.application.room;
 
 import com.miraijr.karaoke.application.ordered_product.DTOs.OrderedProductDTO;
+import com.miraijr.karaoke.application.room.DTOs.ChangeRoomDTO;
 import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
 import com.miraijr.karaoke.application.room.types.RoomDetail;
 import com.miraijr.karaoke.shared.utils.Converter;
@@ -80,6 +81,13 @@ public class RoomController {
     @PutMapping("/{roomId}/order")
     public RoomDetail handleOrderProduct(@RequestBody @Valid OrderedProductDTO orderedProduct, @PathVariable Integer roomId) {
         RoomDetail room = roomService.orderProduct(roomId, orderedProduct);
+
+        return room;
+    }
+
+    @PutMapping("/{roomId}/change-room")
+    public RoomDetail handleChangeRoom(@PathVariable("roomId") Integer sourceRoomId, @RequestBody @Valid ChangeRoomDTO changeRoomDTO) {
+        RoomDetail room = roomService.changeRoom(sourceRoomId, changeRoomDTO.getRoomId());
 
         return room;
     }
