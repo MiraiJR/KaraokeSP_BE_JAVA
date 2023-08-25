@@ -9,6 +9,7 @@ import com.miraijr.karaoke.application.payment.PaymentService;
 import com.miraijr.karaoke.application.room.DTOs.RoomDTO;
 import com.miraijr.karaoke.application.room.types.RoomDetail;
 import com.miraijr.karaoke.shared.utils.Converter;
+import com.miraijr.karaoke.shared.utils.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -83,11 +84,13 @@ public class RoomService {
         return Converter.convertRoomToRoomDetail(room);
     }
 
-    public List<RoomEntity> getRooms() {
-        Sort sort = Sort.by(Sort.Order.asc("id"));
-        List<RoomEntity> rooms = roomRepository.findAll(sort);
+    public List<RoomEntity> getRooms(Boolean available) {
+        if(available) {
+            return roomRepository.findAvailableRoom(available);
+        }
 
-        return rooms;
+        Sort sort = Sort.by(Sort.Order.asc("id"));
+        return roomRepository.findAll(sort);
     }
 
     public RoomDetail openRoom(Integer roomId) {
@@ -180,6 +183,7 @@ public class RoomService {
         // update destination + source room to database
         roomRepository.save(sourceRoom);
         destinationRoom = roomRepository.save(destinationRoom);
+        destinationRoom.setPayment(paymentService.calculatePayment(destinationRoom));
         return Converter.convertRoomToRoomDetail(destinationRoom);
     }
 
