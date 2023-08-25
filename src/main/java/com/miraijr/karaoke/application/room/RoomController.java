@@ -26,8 +26,8 @@ public class RoomController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<RoomEntity> handleGetRooms() {
-        List<RoomEntity> rooms = roomService.getRooms();
+    public List<RoomEntity> handleGetRooms(@RequestParam(value = "available", defaultValue = "false") Boolean available) {
+        List<RoomEntity> rooms = roomService.getRooms(available);
 
         return rooms;
     }
