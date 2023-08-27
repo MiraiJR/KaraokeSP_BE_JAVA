@@ -39,7 +39,7 @@ public class ProductService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code [%s] is used".formatted(productDTO.getCode()));
         }
 
-        ProductEntity newProduct = new ProductEntity(productDTO.getCode(), productDTO.getName(), productDTO.getPrice());
+        ProductEntity newProduct = new ProductEntity(productDTO.getName(), productDTO.getCode(), productDTO.getPrice());
         newProduct.setGroupProduct(group);
 
         return productRepository.save(newProduct);
