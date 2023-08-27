@@ -3,7 +3,9 @@ package com.miraijr.karaoke.application.product;
 import com.miraijr.karaoke.application.group_product.GroupProductEntity;
 import com.miraijr.karaoke.application.group_product.GroupProductService;
 import com.miraijr.karaoke.application.product.DTOs.ProductDTO;
+import com.miraijr.karaoke.application.product.DTOs.UpdateProductDTO;
 import com.miraijr.karaoke.application.product.types.GroupProductResponse;
+import com.miraijr.karaoke.application.product.types.ProductDetail;
 import com.miraijr.karaoke.shared.utils.Converter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,8 @@ public class ProductController {
         this.groupProductService = groupProductService;
     }
     @GetMapping()
-    public List<ProductEntity> handleGetProducts(@RequestParam(defaultValue = "all") String group) {
-        List<ProductEntity> products = productService.getProductsByGroup(group);
+    public List<ProductDetail> handleGetProducts(@RequestParam(defaultValue = "all") String group) {
+        List<ProductDetail> products = productService.getProductsByGroup(group);
 
         return products;
     }
@@ -48,10 +50,10 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ProductEntity handleUpdateProduct(@RequestBody @Valid ProductDTO productDTO, @PathVariable Integer productId) {
+    public ProductDetail handleUpdateProduct(@RequestBody @Valid UpdateProductDTO productDTO, @PathVariable Integer productId) {
         ProductEntity newProduct = productService.updateProduct(productId, productDTO);
 
-        return newProduct;
+        return Converter.convertProductToProductDetail(newProduct);
     }
 
     @DeleteMapping("/{productId}")
